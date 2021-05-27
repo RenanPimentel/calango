@@ -19,7 +19,7 @@ async function query(
   }
 }
 
-createTables();
+createTables(query);
 
 export default {
   query,

@@ -1,38 +1,20 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import { Client, Message } from 'discord.js';
+import { Client } from 'discord.js';
 import db from './db';
-
-const bot = new Client();
-
-async function add(msg: Message, args: string[]): Promise<string> {
-  if (!msg.guild) return `Couldn't find the guild of the message`;
-  const command: Command = {
-    id: msg.id,
-    author_id: msg.author.id,
-    guild_id: msg.guild.id,
-    input: args[0],
-    output: args.slice(1).join(' '),
-  };
-
-  if (!msg.guild.systemChannelID) return `Couldn't find the system channel`;
-
-  const dbCommand = await db.addCommand(
-    command,
-    msg.guild.systemChannelID,
-    msg.guild.ownerID,
-  );
-
-  return `Added command '${dbCommand.input}' successfully`;
-}
+import add from './controllers/add';
+import all from './controllers/all';
 
 interface DefaultCommands {
   [keys: string]: CallableFunction;
 }
 
+const bot = new Client();
+
 const defaultCommands: DefaultCommands = {
   add,
+  all,
 };
 
 bot.once('ready', async () => {

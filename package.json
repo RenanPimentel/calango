@@ -2,8 +2,8 @@
   "name": "calango-v2",
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "start": "node src/index.ts"
+    "dev": "nodemon src/main.ts",
+    "start": "node src/main.ts"
   },
   "devDependencies": {
     "@types/node": "^15.6.1",
