@@ -9,6 +9,6 @@ export default async function getCommands(
     [guildId],
   );
 
-  if (response === null) throw new Error('error while adding guild');
+  if (response === null) throw new Error('error while getting commands');
   return response.rows as CommandProtocol[];
 }

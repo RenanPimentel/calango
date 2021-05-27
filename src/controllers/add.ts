@@ -1,12 +1,14 @@
 import { Message } from 'discord.js';
 import db from '../db';
 import CommandProtocol from '../db/command-protocol';
+import findCommand from '../db/utils/find-command';
 
 export default async function add(
   msg: Message,
   args: string[],
 ): Promise<string> {
-  if (!msg.guild) return `Couldn't find the guild of the message`;
+  if (!msg.guild) return "Couldn't find the guild of the message";
+
   const command: CommandProtocol = {
     id: msg.id,
     author_id: msg.author.id,
@@ -17,9 +19,15 @@ export default async function add(
 
   if (!command.output) {
     return `Usage: ${process.env.PREFIX}add <input> <output>`;
+  } else if (!msg.guild.systemChannelID) {
+    return `Couldn't find the system channel`;
   }
 
-  if (!msg.guild.systemChannelID) return `Couldn't find the system channel`;
+  const findedCommand = await findCommand(msg.guild.id, command.input);
+
+  if (findedCommand) {
+    return `This command already exists and it's output is: '${findedCommand.output}'`;
+  }
 
   const dbCommand = await db.addCommand(
     command,

@@ -5,6 +5,7 @@ import { Client } from 'discord.js';
 import db from './db';
 import add from './controllers/add';
 import all from './controllers/all';
+import remove from './controllers/remove';
 
 interface DefaultCommands {
   [keys: string]: CallableFunction;
@@ -12,10 +13,7 @@ interface DefaultCommands {
 
 const bot = new Client();
 
-const defaultCommands: DefaultCommands = {
-  add,
-  all,
-};
+const defaultCommands: DefaultCommands = { add, all, remove };
 
 bot.once('ready', async () => {
   bot.guilds.cache.forEach(async (guild) => {

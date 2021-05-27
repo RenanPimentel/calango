@@ -4,6 +4,8 @@ import addGuild from './utils/add-guild';
 import updateMainChannelId from './utils/update-main-channel-id';
 import getCommands from './utils/get-commands';
 import addCommand from './utils/add-commands';
+import removeCommand from './utils/remove-command';
+import findCommand from './utils/find-command';
 
 const pool = new Pool();
 
@@ -20,11 +22,12 @@ async function query(
 }
 
 createTables(query);
-
 export default {
   query,
   addGuild,
   updateMainChannelId,
   getCommands,
   addCommand,
+  removeCommand,
+  findCommand,
 };
