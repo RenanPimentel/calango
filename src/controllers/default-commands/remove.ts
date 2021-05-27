@@ -6,7 +6,7 @@ async function remove(msg: Message, args: string[]): Promise<string> {
 
   const input = args[0];
 
-  if (input === '') {
+  if (!input) {
     return 'Usage: !remove <input>';
   }
 

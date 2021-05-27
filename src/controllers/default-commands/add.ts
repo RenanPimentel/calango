@@ -12,7 +12,7 @@ async function add(msg: Message, args: string[]): Promise<string> {
     author_id: msg.author.id,
     guild_id: msg.guild.id,
     input: args[0],
-    output: args.slice(1).join(' '),
+    output: args.slice(1).join(' ').replace(/\s+/g, ' '),
   };
 
   if (!command.output) {
