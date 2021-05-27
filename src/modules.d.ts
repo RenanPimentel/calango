@@ -9,3 +9,11 @@ declare namespace NodeJS {
     PGPASSWORD: string;
   }
 }
+
+interface Command {
+  id: string;
+  guild_id: string;
+  input: string;
+  output: string;
+  author_id: string;
+}

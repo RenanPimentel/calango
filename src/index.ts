@@ -8,7 +8,7 @@ const bot = new Client();
 
 async function add(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return `Couldn't find the guild of the message`;
-  const command = {
+  const command: Command = {
     id: msg.id,
     author_id: msg.author.id,
     guild_id: msg.guild.id,
