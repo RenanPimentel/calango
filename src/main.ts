@@ -6,6 +6,7 @@ import db from './db';
 import add from './controllers/default-commands/add';
 import all from './controllers/default-commands/all';
 import remove from './controllers/default-commands/remove';
+import changeActivity from './utils/change-activity';
 
 interface DefaultCommands {
   [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
@@ -16,6 +17,11 @@ const bot = new Client();
 const defaultCommands: DefaultCommands = { add, all, remove };
 
 bot.once('ready', async () => {
+  const cmdInputs = Object.keys(defaultCommands);
+
+  changeActivity(bot, cmdInputs);
+  setInterval(() => changeActivity(bot, cmdInputs), 60 * 1000);
+
   console.log('ready');
 });
 
