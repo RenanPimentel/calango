@@ -1,4 +1,4 @@
-interface CommandProtocol {
+interface ICommand {
   id: string;
   guild_id: string;
   input: string;
@@ -6,4 +6,4 @@ interface CommandProtocol {
   author_id: string;
 }
 
-export default CommandProtocol;
+export default ICommand;

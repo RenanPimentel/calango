@@ -1,13 +1,13 @@
 import { Message, TextChannel } from 'discord.js';
 import db from '../../db';
-import CommandProtocol from '../../db/command-protocol';
+import ICommand from '../../db/ICommand';
 import findCommand from '../../db/utils/find-command';
 import createSystemChannel from '../../utils/create-system-channel';
 
 async function add(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return "Couldn't find the guild of the message";
 
-  const command: CommandProtocol = {
+  const command: ICommand = {
     id: msg.id,
     author_id: msg.author.id,
     guild_id: msg.guild.id,

@@ -1,11 +1,11 @@
-import CommandProtocol from '../command-protocol';
+import ICommand from '../ICommand';
 import db from '../index';
 
 async function addCommand(
-  cmd: CommandProtocol,
+  cmd: ICommand,
   mainChannelId: string,
   adminId: string,
-): Promise<CommandProtocol> {
+): Promise<ICommand> {
   const guild = (
     await db.query('SELECT * FROM guilds WHERE id = $1', [cmd.guild_id])
   )?.rows[0];
@@ -23,7 +23,7 @@ async function addCommand(
   );
 
   if (response === null) throw new Error('error while adding guild');
-  return response.rows[0] as CommandProtocol;
+  return response.rows[0] as ICommand;
 }
 
 export default addCommand;
