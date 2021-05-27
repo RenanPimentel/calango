@@ -4,17 +4,16 @@ import db from '../index';
 async function addCommand(
   cmd: ICommand,
   mainChannelId: string,
-  adminId: string,
 ): Promise<ICommand> {
   const guild = (
     await db.query('SELECT * FROM guilds WHERE id = $1', [cmd.guild_id])
   )?.rows[0];
 
   if (!guild) {
-    await db.query(
-      'INSERT INTO guilds (id, main_channel_id, admin_id) VALUES ($1, $2, $3)',
-      [cmd.guild_id, mainChannelId, adminId],
-    );
+    await db.query('INSERT INTO guilds (id, main_channel_id) VALUES ($1, $2)', [
+      cmd.guild_id,
+      mainChannelId,
+    ]);
   }
 
   const response = await db.query(

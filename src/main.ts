@@ -37,7 +37,7 @@ bot.on('guildCreate', async (guild) => {
 
   guild.setSystemChannel(channelId);
 
-  db.addGuild(guild.id, channelId, guild.ownerID);
+  db.addGuild(guild.id, channelId);
 });
 
 bot.on('message', async (msg) => {

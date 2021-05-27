@@ -2,8 +2,7 @@ async function createTables(query: CallableFunction): Promise<void> {
   await query(
     `CREATE TABLE IF NOT EXISTS guilds (
     id VARCHAR(64) NOT NULL PRIMARY KEY,
-    main_channel_id VARCHAR(64) NOT NULl,
-    admin_id VARCHAR(64) NOT NULL
+    main_channel_id VARCHAR(64) NOT NULl
   );`,
   );
 

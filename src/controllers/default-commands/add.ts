@@ -36,11 +36,7 @@ async function add(msg: Message, args: string[]): Promise<string> {
     return `This command already exists and it's output is: '${findedCommand.output}'`;
   }
 
-  const dbCommand = await db.addCommand(
-    command,
-    newSysChannel.id,
-    msg.guild.ownerID,
-  );
+  const dbCommand = await db.addCommand(command, newSysChannel.id);
 
   return `Added command '${dbCommand.input}' successfully`;
 }
