@@ -20,7 +20,7 @@ async function remove(msg: Message, args: string[]): Promise<string> {
     toBeRemovedCommand.author_id !== msg.author.id &&
     msg.guild.ownerID !== msg.author.id
   ) {
-    return 'you are not allowed to remove this command';
+    return 'Only the author of the command or the server owner can remove a command';
   }
 
   const removedCommand = await db.removeCommand(toBeRemovedCommand.id);

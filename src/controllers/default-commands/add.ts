@@ -19,13 +19,13 @@ async function add(msg: Message, args: string[]): Promise<string> {
     return `Usage: ${process.env.PREFIX}add <input> <output>`;
   }
 
-  let newsChannel = msg.guild.channels.cache.find(
-    (guild) => guild.type === 'news',
+  const newsChannel = msg.guild.channels.cache.find(
+    (guild) => guild.name === 'calango-news',
   ) as TextChannel | undefined;
 
   if (!newsChannel) {
     try {
-      newsChannel = await createNewsChannel(msg.guild);
+      await createNewsChannel(msg.guild);
     } catch (e) {
       return e.message;
     }
@@ -37,7 +37,7 @@ async function add(msg: Message, args: string[]): Promise<string> {
     return `This command already exists and it's output is '${findedCommand.output}'`;
   }
 
-  const dbCommand = await db.addCommand(command, newsChannel.id);
+  const dbCommand = await db.addCommand(command);
 
   return `Added command '${dbCommand.input}' successfully`;
 }

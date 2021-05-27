@@ -4,7 +4,7 @@ import db from '../index';
 async function getGuilds(): Promise<IGuild[]> {
   const response = await db.query('SELECT * FROM guilds');
 
-  if (response === null) throw new Error('error while adding guild');
+  if (response === null) throw new Error('error while getting guilds');
 
   return response.rows as IGuild[];
 }

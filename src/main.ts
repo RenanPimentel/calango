@@ -37,21 +37,23 @@ bot.once('ready', () => {
 
 bot.on('guildCreate', async (guild) => {
   const newsChannel = guild.channels.cache.find(
-    (guild) => guild.type === 'news',
+    (guild) => guild.type === 'text',
   );
 
   const channelId = newsChannel
     ? newsChannel.id
     : (
-        await guild.channels.create('calango', {
+        await guild.channels.create('calango-news', {
           reason: "Couldn't find news channel",
-          type: 'news',
+          type: 'text',
         })
       ).id;
-
-  guild.setPublicUpdatesChannel(channelId);
-
+  console.log(channelId);
   db.addGuild(guild.id, channelId);
+});
+
+bot.on('guildDelete', async (guild) => {
+  db.removeGuild(guild.id);
 });
 
 bot.on('message', async (msg) => {

@@ -9,19 +9,27 @@ async function createNewsChannel(guild: Guild): Promise<TextChannel> {
     return newsChannel;
   } else {
     try {
+      const findedCategory = guild.channels.cache.find(
+        (channel) => channel.type === 'category' && channel.name === 'news',
+      );
+
+      const createdCategory = findedCategory
+        ? findedCategory
+        : await guild.channels.create('news', { type: 'category' });
+
       const createdChannel = (await guild.channels.create('calango-news', {
         reason: "couldn't find a news channel",
-        topic: 'News channel',
+        topic: 'Calango news channel',
         type: 'text',
       })) as TextChannel;
 
-      db.updateNewsChannelId(guild.id, createdChannel.id);
-      createdChannel.updateOverwrite(guild.roles.everyone, {
+      createdChannel.setParent(createdCategory.id);
+      createdCategory.updateOverwrite(guild.roles.everyone, {
         SEND_MESSAGES: false,
       });
 
       guild.owner?.send(
-        `automatically added news channel called '${createdChannel.name}' in your server, you can modify it but not delete it`,
+        `automatically added news category and channel called ${createdCategory.name} and '${createdChannel.name}' respectively in your server, you can modify it but not delete it`,
       );
       createdChannel.send(
         "I noticed that this server doesn't contain a news channel, so I created one!",
