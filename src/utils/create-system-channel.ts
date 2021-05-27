@@ -3,7 +3,7 @@ import db from '../db';
 
 async function createSystemChannel(
   guild: Guild,
-  msg?: Message,
+  msg: Message,
 ): Promise<TextChannel> {
   if (guild.systemChannel !== null) return guild.systemChannel;
   const firstChannel = guild.channels.cache.find(
@@ -11,9 +11,13 @@ async function createSystemChannel(
   ) as TextChannel;
 
   try {
-    if (firstChannel) {
+    if (msg.channel) {
+      msg.channel.send('Now this is the system channel');
+      return msg.channel as TextChannel;
+    } else if (firstChannel) {
       guild.setSystemChannel(firstChannel.id ?? null);
-      return msg ? (msg.channel as TextChannel) : firstChannel;
+
+      return firstChannel;
     } else {
       const createdChannel = await guild.channels.create('calango', {
         reason: "couldn't find a system channel",
