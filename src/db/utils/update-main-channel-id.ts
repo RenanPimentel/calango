@@ -1,12 +1,12 @@
 import db from '../index';
 
-async function updateMainChannelId(
+async function updateNewsChannelId(
   guildId: string,
-  newMainChannelId: string,
+  newsChannelId: string,
 ): Promise<void> {
   const response = await db.query(
-    'UPDATE guilds SET main_channel_id = $2 WHERE id = $1',
-    [guildId, newMainChannelId],
+    'UPDATE guilds SET news_channel_id = $2 WHERE id = $1',
+    [guildId, newsChannelId],
   );
 
   if (response === null) {
@@ -14,4 +14,4 @@ async function updateMainChannelId(
   }
 }
 
-export default updateMainChannelId;
+export default updateNewsChannelId;

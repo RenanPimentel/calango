@@ -2,7 +2,7 @@ import { Message, TextChannel } from 'discord.js';
 import db from '../../db';
 import ICommand from '../../db/ICommand';
 import findCommand from '../../db/utils/find-command';
-import createSystemChannel from '../../utils/create-system-channel';
+import createNewsChannel from '../../utils/create-news-channel';
 
 async function add(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return "Couldn't find the guild of the message";
@@ -19,24 +19,25 @@ async function add(msg: Message, args: string[]): Promise<string> {
     return `Usage: ${process.env.PREFIX}add <input> <output>`;
   }
 
-  let newSysChannel: null | TextChannel = null;
-  if (!msg.guild.systemChannel) {
+  let newsChannel = msg.guild.channels.cache.find(
+    (guild) => guild.type === 'news',
+  ) as TextChannel | undefined;
+
+  if (!newsChannel) {
     try {
-      newSysChannel = await createSystemChannel(msg.guild, msg);
+      newsChannel = await createNewsChannel(msg.guild);
     } catch (e) {
       return e.message;
     }
-  } else {
-    newSysChannel = msg.guild.systemChannel;
   }
 
   const findedCommand = await findCommand(msg.guild.id, command.input);
 
   if (findedCommand) {
-    return `This command already exists and it's output is: '${findedCommand.output}'`;
+    return `This command already exists and it's output is '${findedCommand.output}'`;
   }
 
-  const dbCommand = await db.addCommand(command, newSysChannel.id);
+  const dbCommand = await db.addCommand(command, newsChannel.id);
 
   return `Added command '${dbCommand.input}' successfully`;
 }

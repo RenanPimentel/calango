@@ -1,14 +1,15 @@
 import { Pool, QueryResult } from 'pg';
 import createTables from './utils/create-tables';
 import addGuild from './utils/add-guild';
-import updateMainChannelId from './utils/update-main-channel-id';
+import updateNewsChannelId from './utils/update-main-channel-id';
 import getCommands from './utils/get-commands';
 import addCommand from './utils/add-commands';
 import removeCommand from './utils/remove-command';
 import findCommand from './utils/find-command';
+import getNewsChannelId from './utils/get-news-channel-id';
+import getGuilds from './utils/get-guilds';
 
 const pool = new Pool();
-
 async function query(
   text: string,
   params?: string[],
@@ -18,13 +19,14 @@ async function query(
 }
 
 createTables(query);
-
 export default {
   query,
   addGuild,
-  updateMainChannelId,
+  updateNewsChannelId,
   getCommands,
   addCommand,
   removeCommand,
   findCommand,
+  getNewsChannelId,
+  getGuilds,
 };

@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import { Client, Message } from 'discord.js';
+import { Client, GuildManager, Message } from 'discord.js';
 import db from './db';
 import add from './controllers/default-commands/add';
 import all from './controllers/default-commands/all';
@@ -16,9 +16,19 @@ const bot = new Client();
 
 const defaultCommands: DefaultCommands = { add, all, remove };
 
-bot.once('ready', async () => {
+const addAllGuilds = async (guilds: GuildManager) => {
+  const dbGuilds = await db.getGuilds();
+  guilds.cache.forEach((guild) => {
+    if (!dbGuilds.find((dbGuild) => dbGuild.id === guild.id)) {
+      db.addGuild(guild.id);
+    }
+  });
+};
+
+bot.once('ready', () => {
   const cmdInputs = Object.keys(defaultCommands);
 
+  addAllGuilds(bot.guilds);
   changeActivity(bot, cmdInputs);
   setInterval(() => changeActivity(bot, cmdInputs), 60 * 1000);
 
@@ -26,16 +36,20 @@ bot.once('ready', async () => {
 });
 
 bot.on('guildCreate', async (guild) => {
-  const channelId =
-    guild.systemChannelID !== null
-      ? guild.systemChannelID
-      : (
-          await guild.channels.create('calango', {
-            reason: "Couldn't find system channel",
-          })
-        ).id;
+  const newsChannel = guild.channels.cache.find(
+    (guild) => guild.type === 'news',
+  );
 
-  guild.setSystemChannel(channelId);
+  const channelId = newsChannel
+    ? newsChannel.id
+    : (
+        await guild.channels.create('calango', {
+          reason: "Couldn't find news channel",
+          type: 'news',
+        })
+      ).id;
+
+  guild.setPublicUpdatesChannel(channelId);
 
   db.addGuild(guild.id, channelId);
 });
