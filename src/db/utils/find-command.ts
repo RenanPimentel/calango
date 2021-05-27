@@ -3,11 +3,11 @@ import db from '../index';
 
 async function findCommand(
   guildId: string,
-  input: string,
+  cmdInput: string,
 ): Promise<CommandProtocol> {
   const response = await db.query(
     'SELECT * FROM commands WHERE guild_id = $1 AND input = $2',
-    [guildId, input],
+    [guildId, cmdInput],
   );
 
   if (response === null) throw new Error('error while finding command');

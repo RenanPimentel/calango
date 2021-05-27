@@ -1,14 +1,15 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import { Client } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import db from './db';
-import add from './controllers/add';
-import all from './controllers/all';
-import remove from './controllers/remove';
+import add from './controllers/default-commands/add';
+import all from './controllers/default-commands/all';
+import remove from './controllers/default-commands/remove';
+import createSystemChannel from './utils/create-system-channel';
 
 interface DefaultCommands {
-  [keys: string]: CallableFunction;
+  [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
 }
 
 const bot = new Client();
@@ -16,17 +17,8 @@ const bot = new Client();
 const defaultCommands: DefaultCommands = { add, all, remove };
 
 bot.once('ready', async () => {
-  bot.guilds.cache.forEach(async (guild) => {
-    if (guild.systemChannel !== null) return;
+  bot.guilds.cache.forEach(createSystemChannel);
 
-    const createdChannel = await guild.channels.create('calango', {
-      reason: `couldn't find system channel`,
-      topic: 'this is a required system channel',
-    });
-    guild.setSystemChannel(createdChannel.id);
-
-    db.updateMainChannelId(guild.id, createdChannel.id);
-  });
   console.log('ready');
 });
 
@@ -52,13 +44,14 @@ bot.on('message', async (msg) => {
     .split(' ');
 
   if (input in defaultCommands) {
-    msg.channel.send(await defaultCommands[input](msg, args));
-    return;
+    return msg.channel.send(await defaultCommands[input](msg, args));
   }
-  const commands = await db.getCommands(msg.guild.id);
-  const command = commands.find((cmd) => cmd.input === input);
 
-  if (command) msg.channel.send(command.output);
+  const command = await db.findCommand(msg.guild.id, input);
+
+  if (command) {
+    msg.channel.send(command.output);
+  }
 });
 
 bot.login(process.env.TOKEN);

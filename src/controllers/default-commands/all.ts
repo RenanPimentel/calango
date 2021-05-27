@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
-import db from '../db';
+import db from '../../db';
 
 async function all(msg: Message): Promise<string> {
-  if (!msg.guild) return `Couldn't find the guild of the message`;
+  if (!msg.guild) return "Couldn't find the guild of the message";
 
   const commands = await db.getCommands(msg.guild.id);
   const allInputs = commands.map((cmd) => cmd.input).join(', ');

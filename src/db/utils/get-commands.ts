@@ -1,9 +1,7 @@
 import CommandProtocol from '../command-protocol';
 import db from '../index';
 
-export default async function getCommands(
-  guildId: string,
-): Promise<CommandProtocol[]> {
+async function getCommands(guildId: string): Promise<CommandProtocol[]> {
   const response = await db.query(
     'SELECT * FROM commands WHERE guild_id = $1',
     [guildId],
@@ -12,3 +10,5 @@ export default async function getCommands(
   if (response === null) throw new Error('error while getting commands');
   return response.rows as CommandProtocol[];
 }
+
+export default getCommands;

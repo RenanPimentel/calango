@@ -1,7 +1,7 @@
 import CommandProtocol from '../command-protocol';
 import db from '../index';
 
-export default async function addCommand(
+async function addCommand(
   cmd: CommandProtocol,
   mainChannelId: string,
   adminId: string,
@@ -25,3 +25,5 @@ export default async function addCommand(
   if (response === null) throw new Error('error while adding guild');
   return response.rows[0] as CommandProtocol;
 }
+
+export default addCommand;

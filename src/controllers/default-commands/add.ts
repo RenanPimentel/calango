@@ -1,12 +1,10 @@
 import { Message } from 'discord.js';
-import db from '../db';
-import CommandProtocol from '../db/command-protocol';
-import findCommand from '../db/utils/find-command';
+import db from '../../db';
+import CommandProtocol from '../../db/command-protocol';
+import findCommand from '../../db/utils/find-command';
+import createSystemChannel from '../../utils/create-system-channel';
 
-export default async function add(
-  msg: Message,
-  args: string[],
-): Promise<string> {
+async function add(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return "Couldn't find the guild of the message";
 
   const command: CommandProtocol = {
@@ -19,8 +17,18 @@ export default async function add(
 
   if (!command.output) {
     return `Usage: ${process.env.PREFIX}add <input> <output>`;
-  } else if (!msg.guild.systemChannelID) {
-    return `Couldn't find the system channel`;
+  }
+
+  if (!msg.guild.systemChannelID) {
+    try {
+      await createSystemChannel(msg.guild);
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  if (!msg.guild.systemChannelID) {
+    return "Couldn't find the system channel";
   }
 
   const findedCommand = await findCommand(msg.guild.id, command.input);
@@ -37,3 +45,5 @@ export default async function add(
 
   return `Added command '${dbCommand.input}' successfully`;
 }
+
+export default add;

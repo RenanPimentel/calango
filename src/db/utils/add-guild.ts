@@ -1,6 +1,6 @@
 import db from '../index';
 
-export default async function addGuild(
+async function addGuild(
   guildId: string,
   mainChannelId: string,
   adminId: string,
@@ -12,3 +12,5 @@ export default async function addGuild(
 
   if (response === null) throw new Error('error while adding guild');
 }
+
+export default addGuild;

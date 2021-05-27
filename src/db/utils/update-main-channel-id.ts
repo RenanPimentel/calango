@@ -1,6 +1,6 @@
 import db from '../index';
 
-export default async function updateMainChannelId(
+async function updateMainChannelId(
   guildId: string,
   newMainChannelId: string,
 ): Promise<void> {
@@ -9,5 +9,9 @@ export default async function updateMainChannelId(
     [guildId, newMainChannelId],
   );
 
-  if (response === null) throw new Error('error while adding guild');
+  if (response === null) {
+    throw new Error('error while updating main channel id');
+  }
 }
+
+export default updateMainChannelId;

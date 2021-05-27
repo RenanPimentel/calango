@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import db from '../db';
+import db from '../../db';
 
 async function remove(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return `Couldn't find the guild of the message`;
@@ -25,7 +25,7 @@ async function remove(msg: Message, args: string[]): Promise<string> {
 
   const removedCommand = await db.removeCommand(toBeRemovedCommand.id);
 
-  return `removed ${removedCommand.input} successfully`;
+  return `removed '${removedCommand.input}' successfully`;
 }
 
 export default remove;

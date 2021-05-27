@@ -1,6 +1,4 @@
-export default async function createTables(
-  query: CallableFunction,
-): Promise<void> {
+async function createTables(query: CallableFunction): Promise<void> {
   await query(
     `CREATE TABLE IF NOT EXISTS guilds (
     id VARCHAR(64) NOT NULL PRIMARY KEY,
@@ -23,3 +21,5 @@ export default async function createTables(
   `,
   );
 }
+
+export default createTables;

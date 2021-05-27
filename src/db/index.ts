@@ -13,15 +13,12 @@ async function query(
   text: string,
   params?: string[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<QueryResult<any> | null> {
-  try {
-    return pool.query(text, params);
-  } catch (e) {
-    return null;
-  }
+): Promise<QueryResult<any>> {
+  return pool.query(text, params);
 }
 
 createTables(query);
+
 export default {
   query,
   addGuild,
