@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import db from '../../db';
 import CommandProtocol from '../../db/command-protocol';
 import findCommand from '../../db/utils/find-command';
@@ -19,16 +19,15 @@ async function add(msg: Message, args: string[]): Promise<string> {
     return `Usage: ${process.env.PREFIX}add <input> <output>`;
   }
 
-  if (!msg.guild.systemChannelID) {
+  let newSysChannel: null | TextChannel = null;
+  if (!msg.guild.systemChannel) {
     try {
-      await createSystemChannel(msg.guild);
+      newSysChannel = await createSystemChannel(msg.guild, msg);
     } catch (e) {
       return e.message;
     }
-  }
-
-  if (!msg.guild.systemChannelID) {
-    return "Couldn't find the system channel";
+  } else {
+    newSysChannel = msg.guild.systemChannel;
   }
 
   const findedCommand = await findCommand(msg.guild.id, command.input);
@@ -39,7 +38,7 @@ async function add(msg: Message, args: string[]): Promise<string> {
 
   const dbCommand = await db.addCommand(
     command,
-    msg.guild.systemChannelID,
+    newSysChannel.id,
     msg.guild.ownerID,
   );
 

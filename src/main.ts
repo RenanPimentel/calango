@@ -6,7 +6,6 @@ import db from './db';
 import add from './controllers/default-commands/add';
 import all from './controllers/default-commands/all';
 import remove from './controllers/default-commands/remove';
-import createSystemChannel from './utils/create-system-channel';
 
 interface DefaultCommands {
   [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
@@ -17,8 +16,6 @@ const bot = new Client();
 const defaultCommands: DefaultCommands = { add, all, remove };
 
 bot.once('ready', async () => {
-  bot.guilds.cache.forEach(createSystemChannel);
-
   console.log('ready');
 });
 
@@ -28,7 +25,7 @@ bot.on('guildCreate', async (guild) => {
       ? guild.systemChannelID
       : (
           await guild.channels.create('calango', {
-            reason: `couldn't find system channel`,
+            reason: "Couldn't find system channel",
           })
         ).id;
 
