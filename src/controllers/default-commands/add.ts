@@ -36,10 +36,12 @@ async function add(msg: Message, args: string[]): Promise<string> {
   if (findedCommand) {
     return `This command already exists and it's output is '${findedCommand.output}'`;
   }
-
-  const dbCommand = await db.addCommand(command);
-
-  return `Added command '${dbCommand.input}' successfully`;
+  try {
+    const dbCommand = await db.addCommand(command);
+    return `Added command '${dbCommand.input}' successfully`;
+  } catch (e) {
+    return "Can't create this command, output or input is too long";
+  }
 }
 
 export default add;

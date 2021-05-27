@@ -48,7 +48,7 @@ bot.on('guildCreate', async (guild) => {
           type: 'text',
         })
       ).id;
-  console.log(channelId);
+
   db.addGuild(guild.id, channelId);
 });
 
@@ -69,7 +69,7 @@ bot.on('message', async (msg) => {
   const command = await db.findCommand(msg.guild.id, input);
 
   if (command) {
-    msg.channel.send(command.output);
+    return msg.channel.send(command.output);
   }
 });
 
