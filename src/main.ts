@@ -8,7 +8,6 @@ import all from './controllers/default-commands/all';
 import remove from './controllers/default-commands/remove';
 import changeActivity from './utils/change-activity';
 import addAllGuilds from './db/utils/add-all-guilds';
-import time from './controllers/default-commands/time';
 
 interface DefaultCommands {
   [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
@@ -16,7 +15,7 @@ interface DefaultCommands {
 
 const bot = new Client();
 
-const defaultCommands: DefaultCommands = { add, all, remove, time };
+const defaultCommands: DefaultCommands = { add, all, remove };
 
 bot.once('ready', () => {
   const cmdInputs = Object.keys(defaultCommands);
