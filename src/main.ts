@@ -1,12 +1,14 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import { Client, GuildManager, Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import db from './db';
 import add from './controllers/default-commands/add';
 import all from './controllers/default-commands/all';
 import remove from './controllers/default-commands/remove';
 import changeActivity from './utils/change-activity';
+import addAllGuilds from './db/utils/add-all-guilds';
+import time from './controllers/default-commands/time';
 
 interface DefaultCommands {
   [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
@@ -14,16 +16,7 @@ interface DefaultCommands {
 
 const bot = new Client();
 
-const defaultCommands: DefaultCommands = { add, all, remove };
-
-const addAllGuilds = async (guilds: GuildManager) => {
-  const dbGuilds = await db.getGuilds();
-  guilds.cache.forEach((guild) => {
-    if (!dbGuilds.find((dbGuild) => dbGuild.id === guild.id)) {
-      db.addGuild(guild.id);
-    }
-  });
-};
+const defaultCommands: DefaultCommands = { add, all, remove, time };
 
 bot.once('ready', () => {
   const cmdInputs = Object.keys(defaultCommands);
