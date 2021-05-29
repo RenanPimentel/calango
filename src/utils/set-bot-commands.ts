@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Command } from 'discord.js';
+import { readdirSync } from 'fs';
 
-type Readdir = (path: string) => Promise<string[]>;
-const readdir = require('fs').promises.readdir as Readdir;
-
-async function setBotCommands(client: Client, path: string): Promise<void> {
-  const files = await readdir(path);
+function setBotCommands(client: Client, path: string): void {
+  const files = readdirSync(path);
 
   files
     .map((file) => file.split('.')[0])

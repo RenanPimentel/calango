@@ -1,6 +1,6 @@
 declare module 'discord.js' {
   export interface Client {
-    commands: Collection<unknown, Command>;
+    commands: Collection<string, Command>;
   }
 
   export interface Command {
