@@ -1,8 +1,8 @@
 import { Message, TextChannel } from 'discord.js';
-import db from '../../db';
-import ICommand from '../../db/ICommand';
-import findCommand from '../../db/utils/find-command';
-import createNewsChannel from '../../utils/create-news-channel';
+import db from '../db';
+import ICommand from '../db/ICommand';
+import findCommand from '../db/utils/find-command';
+import createNewsChannel from '../utils/create-news-channel';
 
 async function add(msg: Message, args: string[]): Promise<string> {
   if (!msg.guild) return "Couldn't find the guild of the message";
@@ -44,4 +44,4 @@ async function add(msg: Message, args: string[]): Promise<string> {
   }
 }
 
-export default add;
+export default { name: 'add', description: 'Add a command', execute: add };

@@ -3,7 +3,7 @@ declare namespace NodeJS {
     TOKEN: string;
     PREFIX: string;
     PGUSER: string;
-    PGPORT: number;
+    PGPORT: string;
     PGHOST: string;
     PGDATABASE: string;
     PGPASSWORD: string;

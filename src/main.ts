@@ -1,24 +1,19 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import { Client, Message } from 'discord.js';
+import { Client, Collection } from 'discord.js';
 import db from './db';
-import add from './controllers/default-commands/add';
-import all from './controllers/default-commands/all';
-import remove from './controllers/default-commands/remove';
 import changeActivity from './utils/change-activity';
 import addAllGuilds from './db/utils/add-all-guilds';
-
-interface DefaultCommands {
-  [keys: string]: (msg: Message, args: string[]) => string | Promise<string>;
-}
+import setBotCommands from './utils/set-bot-commands';
+import path from 'path';
 
 const bot = new Client();
+bot.commands = new Collection();
 
-const defaultCommands: DefaultCommands = { add, all, remove };
-
-bot.once('ready', () => {
-  const cmdInputs = Object.keys(defaultCommands);
+bot.once('ready', async () => {
+  await setBotCommands(bot, path.resolve('dist', 'commands'));
+  const cmdInputs = bot.commands.array().map((cmd) => cmd.name);
 
   addAllGuilds(bot.guilds);
   changeActivity(bot, cmdInputs);
@@ -28,9 +23,7 @@ bot.once('ready', () => {
 });
 
 bot.on('guildCreate', async (guild) => {
-  const newsChannel = guild.channels.cache.find(
-    (guild) => guild.type === 'text',
-  );
+  const newsChannel = guild.channels.cache.find(({ type }) => type === 'text');
 
   const channelId = newsChannel
     ? newsChannel.id
@@ -52,17 +45,16 @@ bot.on('message', async (msg) => {
   if (msg.author.bot || msg.channel.type !== 'text' || !msg.guild) return;
   const [input, ...args] = msg.content
     .slice(process.env.PREFIX?.length)
-    .split(' ');
+    .split(/\s+/g);
 
-  if (input in defaultCommands) {
-    return msg.channel.send(await defaultCommands[input](msg, args));
+  if (bot.commands.has(input)) {
+    const output = await bot.commands.get(input)?.execute(msg, args);
+    return msg.channel.send(output ?? 'Not able to access this command');
   }
 
   const command = await db.findCommand(msg.guild.id, input);
 
-  if (command) {
-    return msg.channel.send(command.output);
-  }
+  if (command) return msg.channel.send(command.output);
 });
 
 bot.login(process.env.TOKEN);
