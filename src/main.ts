@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config({ path: 'src/config/config.env' });
 
-import CreateBotCtrl from './controllers/botCtrl';
+import CreateBotCtrl from './controllers/bot-controller';
 import getClient from './utils/get-client';
 
 const bot = getClient();

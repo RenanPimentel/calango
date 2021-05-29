@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { readdirSync } from 'fs';
 import { IBotCtrl, IBotCtrlFactory } from 'calango-v2';
 import { Client, Guild, Message, Command } from 'discord.js';
@@ -39,6 +38,7 @@ class BotCtrl implements IBotCtrl {
     files
       .map((file) => file.replace(/\..+/g, ''))
       .forEach((file) => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const command = require(`${cmdPath}/${file}`).default as Command;
         this.client.commands.set(command.name, { ...command });
       });
